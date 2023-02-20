@@ -1,24 +1,68 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import useFormulario from './hooks/useFormulario';
+import Input from './components/Input'
+import Card from './components/Card'
+import Container from './components/Container'
+import Button from './components/Button'
 
 function App() {
+  const [usuarios, setUsuarios] = useState([])
+  const [formulario, handleChange, reset] = useFormulario({
+    name: '',
+    lastname: '',
+    email: ''
+  })
+  const submit = e => {
+    e.preventDefault()
+    setUsuarios([
+      ...usuarios,
+      formulario,
+    ])
+    reset()
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ marginTop: '15%'}}>
+      <Container>
+        <Card>
+          <div style={{ padding: 20 }}>
+            <form onSubmit={submit}>
+              <Input
+                lable='Nombre'
+                name='name'
+                value={formulario.name}
+                onChange={handleChange} 
+                placeholder='Nombre'
+                />
+
+              <Input
+                lable='Apellido'
+                name='lastname'
+                value={formulario.lastname}
+                onChange={handleChange}
+                placeholder='Apellido'
+              />
+              <Input
+                lable='Correo'
+                name='email'
+                value={formulario.email}
+                onChange={handleChange}
+                placeholder='Correo'
+              />
+              <Button>Enviar</Button>
+            </form>
+          </div>
+        </Card>
+        <Card>
+          <ul>
+            {usuarios.map(x =>
+              <li key={x.email}>{`${x.name} ${x.lastname}: ${x.email}`}</li>)}
+          </ul>
+        </Card>
+      </Container>
     </div>
+
   );
 }
 
